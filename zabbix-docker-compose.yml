@@ -6,6 +6,7 @@ volumes:
   zabbix-postgres:
   zabbix-postgres-backup:
   zabbix-database-backups:
+  signal-cli-data:
 
 services:
   postgres:
@@ -89,6 +90,18 @@ services:
     depends_on:
       - postgres
       - zabbix-server
+
+  signal-cli:
+    image: bbernhard/signal-cli-rest-api:latest
+    environment:
+      MODE: normal
+    volumes:
+      - signal-cli-data:/home/.local/share/signal-cli
+    networks:
+      - zabbix-network
+    ports:
+      - "8082:8080"
+    restart: unless-stopped
 
   backups:
     image: ${ZABBIX_POSTGRES_IMAGE_TAG}
