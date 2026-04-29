@@ -94,7 +94,10 @@ services:
   signal-cli:
     image: bbernhard/signal-cli-rest-api:latest
     environment:
-      MODE: normal
+      # json-rpc mode keeps a persistent signal-cli daemon attached for 24/7
+      # receive. Sending via /v2/send still works; messages can be polled from
+      # /v1/receive/{number} or streamed via the WebSocket endpoint.
+      MODE: json-rpc
     volumes:
       - signal-cli-data:/home/.local/share/signal-cli
     networks:
