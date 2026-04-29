@@ -284,4 +284,7 @@ xcuserdata/
 # Local environment — contains DB password and live hostnames
 .env
 
+# Whitelist files the Ansible-template *.txt blanket ignore would otherwise drop
+!diagnoser/requirements.txt
+
 # End of https://www.toptal.com/developers/gitignore/api/git,macos,xcode,jekyll,packer,ansible,vagrant,windows,notepadpp,terraform,powershell,terragrunt,sublimetext,ansibletower,visualstudiocode,linux

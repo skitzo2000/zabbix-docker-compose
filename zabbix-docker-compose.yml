@@ -91,6 +91,21 @@ services:
       - postgres
       - zabbix-server
 
+  zabbix-diagnoser:
+    build: ./diagnoser
+    environment:
+      DIAG_GROQ_API_KEY: ${DIAG_GROQ_API_KEY}
+      DIAG_GROQ_MODEL: ${DIAG_GROQ_MODEL:-llama-3.3-70b-versatile}
+      DIAG_DISCORD_BOT_TOKEN: ${DIAG_DISCORD_BOT_TOKEN}
+      DIAG_DISCORD_GUILD_ID: ${DIAG_DISCORD_GUILD_ID}
+      DIAG_DISCORD_CHANNEL_NAME: ${DIAG_DISCORD_CHANNEL_NAME:-jones-alerts}
+      DIAG_BRAIN_TOKEN: ${DIAG_BRAIN_TOKEN:-}
+      DIAG_BRAIN_PROXY_URL: ${DIAG_BRAIN_PROXY_URL:-https://mcp.thenortonfamily.net/v1}
+      DIAG_BRAIN_NAMESPACE: ${DIAG_BRAIN_NAMESPACE:-goldfish-paul-gmail-com:zabbix-docker-compose}
+    networks:
+      - zabbix-network
+    restart: unless-stopped
+
   signal-cli:
     image: bbernhard/signal-cli-rest-api:latest
     environment:
