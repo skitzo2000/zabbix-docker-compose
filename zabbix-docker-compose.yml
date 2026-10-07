@@ -41,6 +41,9 @@ services:
       ZBX_TRENDCACHESIZE: ${ZABBIX_TRENDCACHESIZE:-64M}
       ZBX_TRENDFUNCTIONCACHESIZE: ${ZABBIX_TRENDFUNCTIONCACHESIZE:-64M}
       ZBX_VALUECACHESIZE: ${ZABBIX_VALUECACHESIZE:-512M}
+      # Default is 1 pinger; a single slow fping run pushed it past 75% busy
+      # (2026-10-07). 3 gives headroom for the ICMP simple checks.
+      ZBX_STARTPINGERS: ${ZABBIX_STARTPINGERS:-3}
     mem_limit: 4g
     mem_reservation: 2g
     networks:
