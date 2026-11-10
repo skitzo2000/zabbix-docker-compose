@@ -11,6 +11,28 @@ volumes:
 services:
   postgres:
     image: ${ZABBIX_POSTGRES_IMAGE_TAG}
+    # Postgres stock defaults (shared_buffers 128MB, autovacuum at 20% dead
+    # rows) on a 24 GB DB made the hourly housekeeper DELETEs and the history
+    # syncers stall, firing "housekeeper over 75%" (paul/zabbix#10). Sized for
+    # the 16 GB komodo CT that shares RAM with other stacks.
+    command: >-
+      postgres
+      -c shared_buffers=${ZABBIX_PG_SHARED_BUFFERS:-2GB}
+      -c effective_cache_size=${ZABBIX_PG_EFFECTIVE_CACHE_SIZE:-6GB}
+      -c work_mem=16MB
+      -c maintenance_work_mem=512MB
+      -c autovacuum_work_mem=256MB
+      -c max_wal_size=4GB
+      -c min_wal_size=1GB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c autovacuum_vacuum_scale_factor=0.02
+      -c autovacuum_analyze_scale_factor=0.01
+      -c autovacuum_vacuum_insert_scale_factor=0.05
+      -c autovacuum_vacuum_cost_limit=1000
+    shm_size: 256m
     volumes:
       - zabbix-postgres:/var/lib/postgresql/data
     environment:
